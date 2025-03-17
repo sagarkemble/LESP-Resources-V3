@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="output.css" />
+  </head>
+  <body
+    class="font-poppins flex h-full flex-col bg-[#000511] text-white opacity-0 transition-all duration-75 ease-in"
+  >
+    <!-- nav bar start -->
+    <nav class="flex hidden items-center p-1 px-3">
+      <div class="logo-container flex gap-1">
+        <div class="logo w-10">
+          <img src="src/icons/other/lesp_logo.png" alt="" class="" />
+        </div>
+        <div
+          class="name-wrapper flex flex-col justify-center text-sm leading-4 font-semibold text-white"
+        >
+          <p>LESP</p>
+          <p>Resources</p>
+        </div>
+      </div>
+
+      <div
+        class="links-container absolute top-0 left-0 z-10 mr-auto max-h-0 w-full translate-y-[3rem] overflow-hidden bg-[#000511] font-medium opacity-0 transition-all duration-300 ease-in md:relative md:ml-auto md:max-h-screen md:w-auto md:translate-y-0 md:bg-none md:text-sm md:opacity-100"
+      >
+        <ul
+          class="flex list-none flex-col items-center justify-center gap-6 py-6 md:flex-row md:gap-3 md:py-0"
+        >
+          <li><a href="#"> Home</a></li>
+          <li><a href="#">About us</a></li>
+          <li><a href="#">PYQ</a></li>
+
+          <li class="flex flex-col md:hidden">
+            <div class="sublink-toggle-button flex items-center gap-1 text-end">
+              <p>Subject</p>
+              <div class="caret-wrapper">
+                <i class="fa-solid fa-caret-down"></i>
+              </div>
+            </div>
+            <ul
+              class="sublink hover:text z-20 flex max-h-0 flex-col items-center gap-3 overflow-hidden opacity-0 transition-all duration-500 ease-in-out"
+            >
+              <a href="#"><li>DCN</li></a>
+              <a href="#"><li>PWP</li></a>
+              <a href="#"><li>JAVA</li></a>
+              <a href="#"><li>UID</li></a>
+              <a href="#"><li>MIC</li></a>
+              <a href="#"><li>EES</li></a>
+            </ul>
+          </li>
+          <li><a href="syllabus.html">Syllabus</a></li>
+          <li id="loginStatus" class="cursor-pointer">Login</li>
+        </ul>
+      </div>
+      <div
+        class="ml-auto flex items-center gap-3 text-2xl text-white md:relative md:right-0 md:ml-0"
+      >
+        <div
+          id="editModeToggleButton"
+          class="hidden cursor-pointer rounded-lg bg-red-500 p-1 px-3 text-base transition-all duration-200 ease-in"
+        >
+          Edit
+        </div>
+        <div class="updateShowBtn">
+          <img
+            src="src/icons/transperent_icons/announcement.png"
+            class="w-7 rounded-lg bg-[#171d2b] p-1"
+          />
+        </div>
+        <img
+          src="src/icons/other/cal.png"
+          alt=""
+          class="h-6 w-6"
+          id="timetable-popup-open-btn"
+        />
+        <div class="translate-y-[0.1rem] text-2xl md:hidden">
+          <i class="fa-solid fa-bars menu-button-wrapper"></i>
+        </div>
+      </div>
+    </nav>
+    <!-- nav bar end -->
+    <div class="flex">
+      <div
+        id="addContainerButton"
+        class="click-effect ml-3 hidden max-h-0 cursor-pointer rounded-lg bg-red-500 px-2 text-center opacity-0 transition-all ease-in-out"
+      >
+        add container
+      </div>
+    </div>
+    <div class="containerWrapper">
+      <!-- warning popup -->
+      <div
+        class="wrapper fixed inset-0 z-20 flex hidden items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="warningPopup"
+      >
+        <div class="wrapper">
+          <div
+            class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+          >
+            <p>Are you sure you want to remove this</p>
+            <div class="flex gap-3 p-1">
+              <button
+                type="button"
+                class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4"
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- edit popup -->
+      <div
+        class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="editForm"
+      >
+        <form
+          class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+          action=""
+        >
+          <div class="flex w-full items-center justify-between">
+            <p class="pl-1 text-xl font-bold">Edit content</p>
+            <i class="fa-solid fa-trash ml-auto pr-2" id="deleteButton"></i>
+          </div>
+          <div class="flex flex-col">
+            <label for="" class="pl-1">Name</label>
+            <input
+              type="text"
+              id="editedName"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label for="" class="pl-1">Link</label>
+            <input
+              type="text"
+              id="editedLink"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+            Fill all the fields
+          </p>
+
+          <div class="flex w-full gap-3 p-1">
+            <button
+              type="button"
+              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- add new card -->
+      <div
+        class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="addNewItemForm"
+      >
+        <form
+          class="form flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+        >
+          <p class="mr-auto pl-1 text-xl font-bold">Add new content</p>
+          <div class="flex flex-col">
+            <label for="" class="pl-1.5">Name</label>
+            <input
+              type="text"
+              id="newItemName"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label for="" class="pl-1.5">Link</label>
+            <input
+              type="text"
+              id="newItemLink"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+            Fill all the fields
+          </p>
+          <div class="flex w-full gap-3 p-1">
+            <button
+              type="button"
+              class="saveButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="CancelButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- add Container Popup -->
+      <div
+        class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="addContainerForm"
+      >
+        <form
+          class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+        >
+          <p class="mr-auto pl-1 text-xl font-bold">Add new container</p>
+          <div class="flex flex-col">
+            <label for="" class="pl-1.5">Name</label>
+            <input
+              type="text"
+              id="newContainerName"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+            Name the container
+          </p>
+          <div class="flex w-full gap-3 p-1">
+            <button
+              type="button"
+              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="individual.js"></script>
+  </body>
+</html>
