@@ -1,7 +1,6 @@
 import {
   database,
   app,
-  isUserLoggedIn,
   getDatabase,
   ref,
   set,
@@ -11,9 +10,12 @@ import {
   remove,
   signOut,
   auth,
+  onAuthStateChanged,
 } from "./firebase.js";
 import { fadeInEffect, fadeOutEffect, smoothTextChange } from "./animation.js";
 // variables
+const updateSection = document.querySelector(".content-description-wrapper");
+const addUpdateButton = document.querySelector(".add-content-button");
 const loginStatus = document.querySelector("#loginStatus");
 const containerWrapper = document.querySelector(".containerWrapper");
 const editToggleButton = document.querySelector("#editModeToggleButton");
@@ -26,22 +28,22 @@ const addContainerPopup = document.querySelector("#addContainerForm");
 let isDeleteContainerFlag = false;
 const subject = "ees";
 const sem = "sem1";
-const dbRef = ref(database, `resources/${sem}/${subject}`);
+const div = "div-A";
+const dbRef = ref(database, `resources/${sem}/${div}/${subject}`);
 let dbIncomingData = {};
 let currentEditingData = {};
 let isEditing = false;
 
-isUserLoggedIn() //checks if user has already loggedin
-  .then(() => {
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     console.log("user logged in");
 
     loginStatus.textContent = "Logout";
     editToggleButton.classList.remove("hidden");
-  })
-  .catch(() => {
+  } else {
     window.location.href = "./login.html";
-  });
-
+  }
+});
 // login/logout toggle
 loginStatus.addEventListener("click", () => {
   if (loginStatus.textContent === "Logout") {
@@ -57,8 +59,6 @@ loginStatus.addEventListener("click", () => {
     window.location.href = "index.html";
   }
 });
-
-// animation function
 
 // fetching data
 async function readDataDb() {
@@ -190,6 +190,7 @@ function createCard(obj, container, parentContainerName) {
 
 // CRUD operation functions
 editToggleButton.addEventListener("click", () => {
+  addUpdateButton.classList.toggle("hidden");
   const editIcons = document.querySelectorAll(".iconsWrapper");
   editIcons.forEach((icon) => {
     icon.classList.toggle("hidden");
@@ -211,6 +212,8 @@ editToggleButton.addEventListener("click", () => {
   // addContainerButton.classList.toggle("hidden");
 });
 
+addUpdateButton.addEventListener("click", () => {});
+
 function addCard(key) {
   const saveButton = document.querySelector("#addNewItemForm .saveButton");
   const CancelButton = document.querySelector("#addNewItemForm .CancelButton");
@@ -226,7 +229,7 @@ function addCard(key) {
       const newLink = newItemLink.value;
       const newRef = ref(
         database,
-        `resources/${sem}/${subject}/${key}/${newName}`,
+        `resources/${sem}/${div}/${subject}/${key}/${newName}`,
       );
       for (let subkey in dbIncomingData[key]) {
         console.log(subkey);
@@ -294,7 +297,7 @@ addContainerButton.addEventListener("click", () => {
       const currentDate = new Date().toISOString().split("T")[0];
       const newRef = ref(
         database,
-        `resources/${sem}/${subject}/${ContainerName}`,
+        `resources/${sem}/${div}/${subject}/${ContainerName}`,
       );
 
       set(newRef, { name: ContainerName })
@@ -330,13 +333,13 @@ function deleteCard() {
     if (!isDeleteContainerFlag) {
       let deleteRef = ref(
         database,
-        `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+        `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
       );
 
       remove(deleteRef)
         .then(() => {
           console.log(
-            `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
           );
 
           console.log("Card updated successfully!");
@@ -349,13 +352,13 @@ function deleteCard() {
     } else {
       let deleteRef = ref(
         database,
-        `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}`,
+        `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
       );
 
       remove(deleteRef)
         .then(() => {
           console.log(
-            `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}`,
+            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
           );
 
           console.log("Card updated successfully!");
@@ -395,13 +398,13 @@ function editCard(currentItemName, currentItemLink) {
 
       let updateRef = ref(
         database,
-        `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+        `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
       );
 
       update(updateRef, updatedData)
         .then(() => {
           console.log(
-            `resources/${sem}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
           );
 
           console.log("Card updated successfully!");

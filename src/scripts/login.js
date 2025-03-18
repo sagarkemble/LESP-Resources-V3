@@ -1,7 +1,7 @@
 import {
   signInWithEmailAndPassword,
   auth,
-  isUserLoggedIn,
+  onAuthStateChanged,
 } from "./firebase.js";
 import { fadeInEffect } from "./animation.js";
 const inputEmail = document.querySelector("#input-email");
@@ -9,19 +9,24 @@ const inputPassword = document.querySelector("#input-password");
 const loginPopup = document.querySelector(".login-popup");
 const button = document.querySelector("#login-button");
 const errmsg = document.querySelector(".invalid-msg");
+let subject = "ees";
+let sem = "sem1";
+let div = "div-A";
 window.addEventListener("load", function () {
   fadeInEffect(this.document.body);
 });
-isUserLoggedIn()
-  .then(() => {
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log(user);
+
     loginPopup.classList.remove("hidden");
     setTimeout(() => {
       window.location.href = "../html/subjectpage.html";
     }, 100);
-  })
-  .catch(() => {
+  } else {
     console.log("Login in using email and password");
-  });
+  }
+});
 button.addEventListener("click", () => {
   const inputEmailValue = inputEmail.value;
   const inputPasswordValue = inputPassword.value;
@@ -45,3 +50,4 @@ button.addEventListener("click", () => {
       inputPassword.value = "";
     });
 });
+export { subject, sem, div };

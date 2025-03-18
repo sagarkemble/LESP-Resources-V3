@@ -29,22 +29,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase();
 // firebaseConfig end
-function isUserLoggedIn() {
-  return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        resolve("User is already logged in:");
-      } else {
-        reject("User not logged in");
-      }
-    });
-  });
-}
-
 export {
   app,
   database,
-  isUserLoggedIn,
   getDatabase,
   ref,
   set,
@@ -55,4 +42,5 @@ export {
   signOut,
   auth,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 };
