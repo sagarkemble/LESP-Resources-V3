@@ -1,9 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import {
+  database,
+  app,
+  isUserLoggedIn,
   getDatabase,
   ref,
   set,
@@ -11,25 +9,9 @@ import {
   update,
   onValue,
   remove,
-} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
-import {
-  onAuthStateChanged,
   signOut,
-} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDMmNS2rcOyAZ5JLcuKX-dNCCl6uCLUAuQ",
-  authDomain: "lesp-resources.firebaseapp.com",
-  projectId: "lesp-resources",
-  storageBucket: "lesp-resources.appspot.com",
-  messagingSenderId: "152804379031",
-  appId: "1:152804379031:web:03c67a880689436de11cd2",
-  measurementId: "G-P3KBEVHXJ4",
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase();
-// firebaseConfig end
+  auth,
+} from "./firebase.js";
 // variables
 const loginStatus = document.querySelector("#loginStatus");
 const containerWrapper = document.querySelector(".containerWrapper");
@@ -48,15 +30,16 @@ let dbIncomingData = {};
 let currentEditingData = {};
 let isEditing = false;
 
-//auto login if userid stored in localstorage
-onAuthStateChanged(auth, (user) => {
-  if (user) {
+isUserLoggedIn() //checks if user has already loggedin
+  .then(() => {
+    console.log("user logged in");
+
     loginStatus.textContent = "Logout";
     editToggleButton.classList.remove("hidden");
-  } else {
-    console.log("User not logged in, showing login form");
-  }
-});
+  })
+  .catch(() => {
+    window.location.href = "./login.html";
+  });
 
 // login/logout toggle
 loginStatus.addEventListener("click", () => {
@@ -295,8 +278,8 @@ function addCard(key) {
           console.log("New item added successfully!");
           fadeOutEffect(addPopup);
           readDataDb();
-          // location.reload();
-          reloadDataDb();
+          location.reload();
+          // reloadDataDb();
         })
         .catch((error) => {
           window.location.href = "error.html";

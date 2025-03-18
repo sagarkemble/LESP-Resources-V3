@@ -8,7 +8,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
     />
-    <link rel="stylesheet" href="output.css" />
+    <link rel="stylesheet" href="../css/output.css" />
   </head>
   <body class="flex h-full items-center justify-center bg-[#000511] opacity-0">
     <div
@@ -25,7 +25,7 @@
       class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
     >
       <div class="flex flex-col items-center justify-center">
-        <img src="src/icons/other/lesp_logo.png" alt="" class="h-16" />
+        <img src="../assets/icons/other/lesp_logo.png" alt="" class="h-16" />
         <label class="text-xl font-medium"> Login</label>
         <label class="invalid-msg hidden text-base font-medium text-red-500">
           Invalid credentials</label
@@ -59,10 +59,10 @@
     </form>
     <script>
       window.addEventListener("load", function () {
-        console.log("All resources including images are fully loaded.");
+        // console.log("All resources including images are fully loaded.");
         document.body.classList.add("fadeEffect");
       });
     </script>
-    <script type="module" src="script.js"></script>
+    <script type="module" src="../scripts/login.js"></script>
   </body>
 </html>
