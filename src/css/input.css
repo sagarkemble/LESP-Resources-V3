@@ -11,21 +11,6 @@ body {
   transition-duration: 5s;
 } */
 
-@keyframes fadeEffectAnimation {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-button {
-  cursor: pointer;
-}
-.fadeEffect {
-  animation: fadeEffectAnimation 0.5s ease-in;
-  opacity: 1;
-}
 input:-webkit-autofill {
   background-color: #171d2a !important;
   color: white !important;
