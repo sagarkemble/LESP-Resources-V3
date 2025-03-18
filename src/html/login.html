@@ -10,7 +10,9 @@
     />
     <link rel="stylesheet" href="../css/output.css" />
   </head>
-  <body class="flex h-full items-center justify-center bg-[#000511] opacity-0">
+  <body
+    class="flex h-full items-center justify-center bg-[#000511] opacity-0 transition-all duration-100 ease-in"
+  >
     <div
       class="login-popup absolute z-10 flex hidden h-screen w-screen items-center justify-center bg-[#00000090] text-white"
     >
@@ -57,12 +59,6 @@
         </button>
       </div>
     </form>
-    <script>
-      window.addEventListener("load", function () {
-        // console.log("All resources including images are fully loaded.");
-        document.body.classList.add("fadeEffect");
-      });
-    </script>
     <script type="module" src="../scripts/login.js"></script>
   </body>
 </html>

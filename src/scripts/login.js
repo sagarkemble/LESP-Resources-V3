@@ -3,11 +3,15 @@ import {
   auth,
   isUserLoggedIn,
 } from "./firebase.js";
+import { fadeInEffect } from "./animation.js";
 const inputEmail = document.querySelector("#input-email");
 const inputPassword = document.querySelector("#input-password");
 const loginPopup = document.querySelector(".login-popup");
 const button = document.querySelector("#login-button");
 const errmsg = document.querySelector(".invalid-msg");
+window.addEventListener("load", function () {
+  fadeInEffect(this.document.body);
+});
 isUserLoggedIn()
   .then(() => {
     loginPopup.classList.remove("hidden");
