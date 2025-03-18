@@ -9,9 +9,7 @@ const inputPassword = document.querySelector("#input-password");
 const loginPopup = document.querySelector(".login-popup");
 const button = document.querySelector("#login-button");
 const errmsg = document.querySelector(".invalid-msg");
-let subject = "ees";
-let sem = "sem1";
-let div = "div-A";
+
 window.addEventListener("load", function () {
   fadeInEffect(this.document.body);
 });
@@ -50,4 +48,3 @@ button.addEventListener("click", () => {
       inputPassword.value = "";
     });
 });
-export { subject, sem, div };
