@@ -37,7 +37,6 @@ let isEditing = false;
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("user logged in");
-
     loginStatus.textContent = "Logout";
     editToggleButton.classList.remove("hidden");
   } else {
@@ -67,6 +66,7 @@ async function readDataDb() {
       if (snapshot.exists()) {
         console.log(snapshot.val());
         dbIncomingData = snapshot.val();
+        loadUpdates();
         createWrapper();
       } else {
         console.log("No data available");
@@ -101,11 +101,34 @@ async function reloadDataDb() {
     });
 }
 
+function loadUpdates() {
+  for (let key in dbIncomingData.updates) {
+    let update = dbIncomingData.updates[key];
+    const wrapper = document.createElement("div");
+    const deleteUpdateIconWrapper = document.createElement("div");
+    const deleteUpdateIcon = document.createElement("i");
+    wrapper.className = "flex gap-3 items-center";
+    deleteUpdateIconWrapper.className =
+      "hidden flex item-center  deleteUpdateIconWrapper";
+    deleteUpdateIcon.className = "fa-solid fa-trash  text-base";
+    deleteUpdateIconWrapper.appendChild(deleteUpdateIcon);
+    const description = document.createElement("p");
+    description.textContent = update.description;
+    wrapper.appendChild(description);
+    wrapper.appendChild(deleteUpdateIconWrapper);
+    updateSection.appendChild(wrapper);
+    deleteUpdateIconWrapper.addEventListener("click", () => {
+      deleteUpdate(key);
+    });
+  }
+}
+
 function createWrapper() {
   for (let key in dbIncomingData) {
+    if (key == "updates") {
+      continue;
+    }
     const wrapper = document.createElement("div");
-    wrapper.className =
-      "my-3 mb-6 flex flex-col px-3 text-base font-semibold text-white ";
     const deleteContainerIcon = document.createElement("i");
     const title = document.createElement("p");
     const subWrapper = document.createElement("div");
@@ -113,6 +136,8 @@ function createWrapper() {
     const parentContainerName = key;
     const cardContainer = document.createElement("div");
     const iconsWrapper = document.createElement("div");
+    wrapper.className =
+      "my-3 mb-6 flex flex-col px-3 text-base font-semibold text-white ";
     iconsWrapper.className = "iconsWrapper hidden flex gap-2 flex  w-full";
     addElementIcon.className = "fa-solid fa-plus  addElementIcon ";
     deleteContainerIcon.className =
@@ -190,6 +215,9 @@ function createCard(obj, container, parentContainerName) {
 
 // CRUD operation functions
 editToggleButton.addEventListener("click", () => {
+  document.querySelectorAll(".deleteUpdateIconWrapper").forEach((icon) => {
+    icon.classList.toggle("hidden");
+  });
   addUpdateButton.classList.toggle("hidden");
   const editIcons = document.querySelectorAll(".iconsWrapper");
   editIcons.forEach((icon) => {
@@ -212,8 +240,70 @@ editToggleButton.addEventListener("click", () => {
   // addContainerButton.classList.toggle("hidden");
 });
 
-addUpdateButton.addEventListener("click", () => {});
+addUpdateButton.addEventListener("click", () => {
+  const addupdatePopup = document.querySelector("#udpateSectionForm");
+  const saveButton = document.querySelector("#udpateSectionForm .saveButton");
+  const CancelButton = document.querySelector(
+    "#udpateSectionForm .CancelButton",
+  );
+  const updateDescription = document.querySelector("#updateDescription");
+  const errorMsg = document.querySelector("#udpateSectionForm .errorMsg");
+  const now = new Date();
+  const dateWithTime = `${now.toLocaleDateString("en-US", { month: "long", day: "numeric" })} ${now.toTimeString().slice(0, 5)}`;
+  fadeInEffect(addupdatePopup);
+  saveButton.addEventListener("click", () => {
+    if (updateDescription.value.trim() !== "") {
+      errorMsg.classList.add("hidden");
+      const newRef = ref(
+        database,
+        `resources/${sem}/${div}/${subject}/updates/${dateWithTime}`,
+      );
 
+      set(newRef, { description: updateDescription.value })
+        .then(() => {
+          console.log("New item added successfully!");
+          fadeOutEffect(addupdatePopup);
+
+          location.reload();
+        })
+        .catch((error) => {
+          window.location.href = "error.html";
+        });
+    } else {
+      errorMsg.textContent = "Fill all the fields";
+      errorMsg.classList.remove("hidden");
+    }
+  });
+  CancelButton.addEventListener("click", () => {
+    updateDescription.value = "";
+    errorMsg.classList.add("hidden");
+    fadeOutEffect(addupdatePopup1);
+  });
+});
+function deleteUpdate(obj) {
+  fadeInEffect(warningPopup);
+  const saveButton = document.querySelector("#warningPopup .saveButton");
+  const CancelButton = document.querySelector("#warningPopup .CancelButton");
+
+  saveButton.addEventListener("click", () => {
+    let deleteRef = ref(
+      database,
+      `resources/${sem}/${div}/${subject}/updates/${obj}`,
+    );
+
+    remove(deleteRef)
+      .then(() => {
+        fadeOutEffect(warningPopup);
+        location.reload();
+      })
+      .catch((error) => {
+        window.location.href = "error.html";
+      });
+  });
+  CancelButton.addEventListener("click", () => {
+    fadeOutEffect(warningPopup);
+  });
+}
 function addCard(key) {
   const saveButton = document.querySelector("#addNewItemForm .saveButton");
   const CancelButton = document.querySelector("#addNewItemForm .CancelButton");

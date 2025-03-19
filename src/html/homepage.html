@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../css/output.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  </head>
+  <body
+    class="font-poppins flex h-full flex-col bg-[#000511] text-white opacity-0 transition-all duration-75 ease-in"
+  >
+    <!-- nav bar start -->
+    <nav class="flex items-center p-1 px-3">
+      <div class="logo-container flex gap-1">
+        <div class="logo w-10">
+          <img src="../assets/icons/other/lesp_logo.png" alt="" class="" />
+        </div>
+        <div
+          class="name-wrapper flex flex-col justify-center text-sm leading-4 font-semibold text-white"
+        >
+          <p>LESP</p>
+          <p>Resources</p>
+        </div>
+      </div>
+
+      <div
+        class="links-container absolute top-0 left-0 z-10 mr-auto max-h-0 w-full translate-y-[3rem] overflow-hidden bg-[#000511] font-medium opacity-0 transition-all duration-300 ease-in md:relative md:ml-auto md:max-h-screen md:w-auto md:translate-y-0 md:bg-none md:text-sm md:opacity-100"
+      >
+        <ul
+          class="flex list-none flex-col items-center justify-center gap-6 py-6 md:flex-row md:gap-3 md:py-0"
+        >
+          <li><a href="#"> Home</a></li>
+          <li><a href="#">About us</a></li>
+          <li><a href="#">PYQ</a></li>
+
+          <li class="flex flex-col md:hidden">
+            <div class="sublink-toggle-button flex items-center gap-1 text-end">
+              <p>Subject</p>
+              <div class="caret-wrapper">
+                <i class="fa-solid fa-caret-down"></i>
+              </div>
+            </div>
+            <ul
+              class="sublink hover:text z-20 flex max-h-0 flex-col items-center gap-3 overflow-hidden opacity-0 transition-all duration-500 ease-in-out"
+            >
+              <a href="#"><li>DCN</li></a>
+              <a href="#"><li>PWP</li></a>
+              <a href="#"><li>JAVA</li></a>
+              <a href="#"><li>UID</li></a>
+              <a href="#"><li>MIC</li></a>
+              <a href="#"><li>EES</li></a>
+            </ul>
+          </li>
+          <li><a href="syllabus.html">Syllabus</a></li>
+          <li id="loginStatus" class="cursor-pointer">Login</li>
+        </ul>
+      </div>
+      <div
+        class="ml-auto flex items-center gap-3 text-2xl text-white md:relative md:right-0 md:ml-0"
+      >
+        <div
+          id="editModeToggleButton"
+          class="hidden cursor-pointer rounded-lg bg-red-500 p-1 px-3 text-base transition-all duration-200 ease-in"
+        >
+          Edit
+        </div>
+        <div class="updateShowBtn">
+          <img
+            src="../assets/icons/transperent_icons/announcement.png"
+            class="w-7 rounded-lg bg-[#171d2b] p-1"
+          />
+        </div>
+        <img
+          src="../assets/icons/other/cal.png"
+          alt=""
+          class="h-6 w-6"
+          id="timetable-popup-open-btn"
+        />
+        <div class="translate-y-[0.1rem] text-2xl md:hidden">
+          <i class="fa-solid fa-bars menu-button-wrapper"></i>
+        </div>
+      </div>
+    </nav>
+    <div class="update-section-container my-2 flex items-center justify-center">
+      <div class="card mx-3 w-full rounded-3xl bg-[#171D2B] p-6">
+        <div class="content-container flex flex-col gap-2 text-white">
+          <div class="icon-title-wrapper flex items-center gap-1">
+            <div class="icon -translate-x-1">
+              <img
+                src="../assets/icons/black_bg _icons/notice.png"
+                alt=""
+                class="h-12"
+              />
+            </div>
+            <div class="title flex items-center text-lg font-semibold">
+              <p>Update:</p>
+              <div class="add-content-button hidden px-2">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+            </div>
+          </div>
+          <div
+            class="content-description-wrapper flex flex-col text-base font-medium"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <!-- nav bar end -->
+    <div class="flex">
+      <div
+        id="addContainerButton"
+        class="click-effect ml-3 hidden max-h-0 cursor-pointer rounded-lg bg-red-500 px-2 text-center opacity-0 transition-all ease-in-out"
+      >
+        add container
+      </div>
+    </div>
+    <!-- hero-section-container-start -->
+    <div class="hero-section-container my-2 flex items-center justify-center">
+      <div class="swiper w-full" id="swiper-1">
+        <!-- slides-wrapper-start -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+
+          <!-- slide-start -->
+          <div class="swiper-slide w-auto max-w-[600px]">
+            <div
+              class="card min-h-[250px] rounded-3xl bg-[#171D2B] p-6 sm:min-h-[200px]"
+            >
+              <div class="content-container flex flex-col gap-2 text-white">
+                <div class="icon-title-wrapper flex items-center gap-1">
+                  <div class="icon -translate-x-1">
+                    <img
+                      src="src/icons/black_bg _icons/notice.png "
+                      alt=""
+                      class="h-12"
+                    />
+                  </div>
+                  <div class="title text-lg font-semibold">
+                    <p>Important Notice</p>
+                  </div>
+                </div>
+                <div class="content-description-wrapper font-medium' text-base">
+                  <p>
+                    All students are required to fill out this important form as
+                    soon as possible. For queries, contact the administration
+                    office.
+                  </p>
+                </div>
+                <div class="anchor-link-button-wrapper mb-3">
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSfLEiiKBsHCjYPlYDuSNtbPgUlztwqiyYSu3rn8Kt6gyzdryw/viewform?usp=pp_url"
+                    class="text-[#7EA1F4]"
+                    >Read more</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- slide-end -->
+          <!-- slide-start -->
+          <div class="swiper-slide w-auto max-w-[600px]">
+            <div
+              class="card min-h-[250px] rounded-3xl bg-[#171D2B] p-6 sm:min-h-[200px]"
+            >
+              <div class="content-container flex flex-col gap-2 text-white">
+                <div class="icon-title-wrapper flex items-center gap-1">
+                  <div class="icon -translate-x-1">
+                    <img
+                      src="src/icons/black_bg _icons/notice.png "
+                      alt=""
+                      class="h-12"
+                    />
+                  </div>
+                  <div class="title text-lg font-semibold">
+                    <p>Important Notice</p>
+                  </div>
+                </div>
+                <div class="content-description-wrapper font-medium' text-base">
+                  <p>
+                    This is to inform all A Division students that there will be
+                    a surprise test for Data Communication and Computer Networks
+                    (DCN) in this week. Please be prepared..
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- slide-end -->
+        </div>
+        <!-- slides-wrapper-end-->
+
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+    <!-- hero-section-container-end -->
+
+    <script type="module" src="../scripts/homepage.js"></script>
+  </body>
+</html>
