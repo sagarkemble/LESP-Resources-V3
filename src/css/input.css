@@ -23,6 +23,12 @@ input:-webkit-autofill {
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
+.grid-auto-fit > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* font-size: clamp(0.75rem, 4vw, 1rem); */
+}
 
 @media (min-width: 768px) {
   .grid-auto-fit {

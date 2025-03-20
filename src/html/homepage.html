@@ -27,7 +27,7 @@
     class="font-poppins flex h-full flex-col bg-[#000511] text-white opacity-0 transition-all duration-75 ease-in"
   >
     <!-- nav bar start -->
-    <nav class="flex items-center p-1 px-3">
+    <nav class="flex hidden items-center p-1 px-3">
       <div class="logo-container flex gap-1">
         <div class="logo w-10">
           <img src="../assets/icons/other/lesp_logo.png" alt="" class="" />
@@ -69,7 +69,7 @@
             </ul>
           </li>
           <li><a href="syllabus.html">Syllabus</a></li>
-          <li id="loginStatus" class="cursor-pointer">Login</li>
+          <li id="loginToggleButton" class="cursor-pointer"></li>
         </ul>
       </div>
       <div
@@ -98,39 +98,135 @@
         </div>
       </div>
     </nav>
-    <div class="update-section-container my-2 flex items-center justify-center">
-      <div class="card mx-3 w-full rounded-3xl bg-[#171D2B] p-6">
-        <div class="content-container flex flex-col gap-2 text-white">
-          <div class="icon-title-wrapper flex items-center gap-1">
-            <div class="icon -translate-x-1">
-              <img
-                src="../assets/icons/black_bg _icons/notice.png"
-                alt=""
-                class="h-12"
-              />
-            </div>
-            <div class="title flex items-center text-lg font-semibold">
-              <p>Update:</p>
-              <div class="add-content-button hidden px-2">
-                <i class="fa-solid fa-plus"></i>
-              </div>
-            </div>
-          </div>
-          <div
-            class="content-description-wrapper flex flex-col text-base font-medium"
-          ></div>
-        </div>
-      </div>
-    </div>
     <!-- nav bar end -->
     <div class="flex">
       <div
         id="addContainerButton"
         class="click-effect ml-3 hidden max-h-0 cursor-pointer rounded-lg bg-red-500 px-2 text-center opacity-0 transition-all ease-in-out"
       >
-        add container
+        Add notice
       </div>
     </div>
+    <!-- warning popup -->
+    <div
+      class="wrapper fixed inset-0 z-50 flex hidden items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+      id="warningPopup"
+    >
+      <div class="wrapper">
+        <div
+          class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+        >
+          <p>Are you sure you want to remove this</p>
+          <div class="flex gap-3 p-1">
+            <button
+              type="button"
+              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4"
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- add new notice -->
+    <div
+      class="fixed inset-0 z-40 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+      id="addNewNoticeForm"
+    >
+      <form
+        class="form flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+      >
+        <p class="mr-auto pl-1 text-xl font-bold">Add new content</p>
+        <div class="icon-selection flex items-center gap-2">
+          <img
+            src="../assets/icons/other/notice.png"
+            alt=""
+            class="logo h-12"
+          />
+          <p class="leading-5">
+            Click on Icon <br />
+            to change
+          </p>
+        </div>
+        <div class="scopeSelection flex items-center justify-center gap-1">
+          <input type="checkbox" class="checkbox" />
+          <label for="">Globally visible</label>
+        </div>
+        <div
+          class="iconSelectionPopup absolute grid hidden grid-cols-2 gap-3 rounded-lg bg-[#171D2A] p-3"
+        >
+          <img
+            src="../assets/icons/other/notice.png"
+            alt=""
+            class="logo h-12"
+          />
+          <img
+            src="../assets/icons/other/notice.png"
+            alt=""
+            class="logo h-12"
+          />
+          <img
+            src="../assets/icons/other/notice.png"
+            alt=""
+            class="logo h-12"
+          />
+          <img
+            src="../assets/icons/other/notice.png"
+            alt=""
+            class="logo h-12"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label for="" class="pl-1.5">Title</label>
+          <input
+            type="text"
+            id="title"
+            class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label for="" class="pl-1.5">Description</label>
+          <input
+            type="text"
+            id="description"
+            class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label for="" class="pl-1.5">Link(If any)</label>
+          <input
+            type="text"
+            id="link"
+            class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+          />
+        </div>
+        <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+          Fill all the fields
+        </p>
+        <div class="flex w-full gap-3 p-1">
+          <button
+            type="button"
+            class="saveButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            class="CancelButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
     <!-- hero-section-container-start -->
     <div class="hero-section-container my-2 flex items-center justify-center">
       <div class="swiper w-full" id="swiper-1">
@@ -139,43 +235,36 @@
           <!-- Slides -->
 
           <!-- slide-start -->
-          <div class="swiper-slide w-auto max-w-[600px]">
+          <!-- <div class="swiper-slide w-auto max-w-[600px]">
             <div
               class="card min-h-[250px] rounded-3xl bg-[#171D2B] p-6 sm:min-h-[200px]"
             >
               <div class="content-container flex flex-col gap-2 text-white">
                 <div class="icon-title-wrapper flex items-center gap-1">
-                  <div class="icon -translate-x-1">
-                    <img
-                      src="src/icons/black_bg _icons/notice.png "
-                      alt=""
-                      class="h-12"
-                    />
-                  </div>
-                  <div class="title text-lg font-semibold">
-                    <p>Important Notice</p>
-                  </div>
+                  <img
+                    src="https://drive.google.com/thumbnail?id=18gHD0fvNwBL78wP4Ywp_FBLiSKix2fbs"
+                    alt="Image"
+                    class="h-12"
+                  />
+
+                  <p class="title text-lg font-semibold">Important Notice</p>
                 </div>
-                <div class="content-description-wrapper font-medium' text-base">
-                  <p>
-                    All students are required to fill out this important form as
-                    soon as possible. For queries, contact the administration
-                    office.
-                  </p>
-                </div>
-                <div class="anchor-link-button-wrapper mb-3">
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSfLEiiKBsHCjYPlYDuSNtbPgUlztwqiyYSu3rn8Kt6gyzdryw/viewform?usp=pp_url"
-                    class="text-[#7EA1F4]"
-                    >Read more</a
-                  >
-                </div>
+                <p class="content-description-wrapper text-base font-medium">
+                  All students are required to fill out this important form as
+                  soon as possible. For queries, contact the administration
+                  office.
+                </p>
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSfLEiiKBsHCjYPlYDuSNtbPgUlztwqiyYSu3rn8Kt6gyzdryw/viewform?usp=pp_url"
+                  class="anchor-link-button-wrapper mb-3 text-[#7EA1F4]"
+                  >Read more</a
+                >
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- slide-end -->
           <!-- slide-start -->
-          <div class="swiper-slide w-auto max-w-[600px]">
+          <!-- <div class="swiper-slide w-auto max-w-[600px]">
             <div
               class="card min-h-[250px] rounded-3xl bg-[#171D2B] p-6 sm:min-h-[200px]"
             >
@@ -201,7 +290,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- slide-end -->
         </div>
         <!-- slides-wrapper-end-->

@@ -13,6 +13,7 @@ import {
   onValue,
   update,
   remove,
+  push,
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
 
 // Firebase configuration
@@ -36,6 +37,7 @@ export {
   ref,
   set,
   get,
+  push,
   update,
   onValue,
   remove,

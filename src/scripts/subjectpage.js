@@ -13,39 +13,42 @@ import {
   onAuthStateChanged,
 } from "./firebase.js";
 import { fadeInEffect, fadeOutEffect, smoothTextChange } from "./animation.js";
+
 // variables
 const updateSection = document.querySelector(".content-description-wrapper");
-const addUpdateButton = document.querySelector(".add-content-button");
-const loginStatus = document.querySelector("#loginStatus");
+const addUpdateButton = document.querySelector(".add-content-button-wrapper");
+const loginToggleButton = document.querySelector("#loginToggleButton");
 const containerWrapper = document.querySelector(".containerWrapper");
-const editToggleButton = document.querySelector("#editModeToggleButton");
+const editModeToggleButton = document.querySelector("#editModeToggleButton");
 const addContainerButton = document.querySelector("#addContainerButton");
-const editPopup = document.querySelector("#editForm");
-const addPopup = document.querySelector("#addNewItemForm");
+const editItemPopup = document.querySelector("#editItemPopup");
+const addItemPopup = document.querySelector("#addNewItemPopup");
 const warningPopup = document.querySelector("#warningPopup");
-const deleteButton = document.querySelector("#deleteButton");
-const addContainerPopup = document.querySelector("#addContainerForm");
+const deleteItemButton = document.querySelector("#deleteItemButton");
+const addContainerPopup = document.querySelector("#addContainerPopup");
 let isDeleteContainerFlag = false;
 const subject = "ees";
 const sem = "sem1";
 const div = "div-A";
 const dbRef = ref(database, `resources/${sem}/${div}/${subject}`);
-let dbIncomingData = {};
+let incomingDbData = {};
 let currentEditingData = {};
 let isEditing = false;
 
+//checks if the user is logged in before if not it redirects to login.html to relogin
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("user logged in");
-    loginStatus.textContent = "Logout";
-    editToggleButton.classList.remove("hidden");
+    loginToggleButton.textContent = "Logout";
+    editModeToggleButton.classList.remove("hidden");
   } else {
     window.location.href = "./login.html";
   }
 });
-// login/logout toggle
-loginStatus.addEventListener("click", () => {
-  if (loginStatus.textContent === "Logout") {
+
+//this toggles the login state
+loginToggleButton.addEventListener("click", () => {
+  if (loginToggleButton.textContent === "Logout") {
     signOut(auth)
       .then(() => {
         console.log("User logged out");
@@ -59,13 +62,13 @@ loginStatus.addEventListener("click", () => {
   }
 });
 
-// fetching data
-async function readDataDb() {
+// fetches Database data
+async function fetchDbData() {
   await get(dbRef)
     .then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
-        dbIncomingData = snapshot.val();
+        incomingDbData = snapshot.val();
         loadUpdates();
         createWrapper();
       } else {
@@ -79,7 +82,7 @@ async function readDataDb() {
       window.location.href = "error.html";
     });
 }
-readDataDb();
+fetchDbData();
 
 async function reloadDataDb() {
   await get(dbRef)
@@ -87,7 +90,7 @@ async function reloadDataDb() {
       if (snapshot.exists()) {
         console.log(snapshot.val());
         containerWrapper.innerHTML = "";
-        dbIncomingData = snapshot.val();
+        incomingDbData = snapshot.val();
         createWrapper();
       } else {
         console.log("No data available");
@@ -101,9 +104,10 @@ async function reloadDataDb() {
     });
 }
 
+//loads the content in updates section
 function loadUpdates() {
-  for (let key in dbIncomingData.updates) {
-    let update = dbIncomingData.updates[key];
+  for (let key in incomingDbData.updates) {
+    let update = incomingDbData.updates[key];
     const wrapper = document.createElement("div");
     const deleteUpdateIconWrapper = document.createElement("div");
     const deleteUpdateIcon = document.createElement("i");
@@ -122,9 +126,9 @@ function loadUpdates() {
     });
   }
 }
-
+//creates card container
 function createWrapper() {
-  for (let key in dbIncomingData) {
+  for (let key in incomingDbData) {
     if (key == "updates") {
       continue;
     }
@@ -144,7 +148,7 @@ function createWrapper() {
       "fa-solid fa-trash  deleteContainerIcon ml-auto mr-2 text-xl";
     subWrapper.className =
       "title mb-3 text-2xl font-bold flex items-center gap-2 w-full";
-    title.textContent = dbIncomingData[key].name;
+    title.textContent = incomingDbData[key].name;
     cardContainer.className = "grid-auto-fit";
     subWrapper.appendChild(title);
     subWrapper.appendChild(iconsWrapper);
@@ -158,19 +162,16 @@ function createWrapper() {
       addCard(key);
     });
     deleteContainerIcon.addEventListener("click", () => {
-      isDeleteContainerFlag = true;
-      currentEditingData = {
-        parentContainerKey: key,
-      };
-      deleteCard();
+      deleteContainer(key);
     });
     if (isEditing) {
       iconsWrapper.classList.remove("hidden");
     }
-    createCard(dbIncomingData[key], cardContainer, parentContainerName);
+    createCard(incomingDbData[key], cardContainer, parentContainerName);
   }
 }
 
+//creates cards and appeds in card container
 function createCard(obj, container, parentContainerName) {
   // if (!container) return;
   // if (!obj || typeof obj !== "object") return;
@@ -206,15 +207,14 @@ function createCard(obj, container, parentContainerName) {
           editCard(item.name, item.link);
         }
       });
-      deleteButton.addEventListener("click", () => {
+      deleteItemButton.addEventListener("click", () => {
         deleteCard();
       });
     }
   }
 }
 
-// CRUD operation functions
-editToggleButton.addEventListener("click", () => {
+editModeToggleButton.addEventListener("click", () => {
   document.querySelectorAll(".deleteUpdateIconWrapper").forEach((icon) => {
     icon.classList.toggle("hidden");
   });
@@ -225,10 +225,10 @@ editToggleButton.addEventListener("click", () => {
   });
   isEditing = !isEditing;
   console.log("ineditingmode");
-  if (editToggleButton.textContent.trim() === "Edit") {
-    smoothTextChange(editToggleButton, "Exit mode");
-  } else if (editToggleButton.textContent.trim() === "Exit mode") {
-    smoothTextChange(editToggleButton, "Edit");
+  if (editModeToggleButton.textContent.trim() === "Edit") {
+    smoothTextChange(editModeToggleButton, "Exit mode");
+  } else if (editModeToggleButton.textContent.trim() === "Exit mode") {
+    smoothTextChange(editModeToggleButton, "Edit");
   }
   if (addContainerButton.classList.contains("hidden")) {
     addContainerButton.classList.add("mt-3");
@@ -240,14 +240,16 @@ editToggleButton.addEventListener("click", () => {
   // addContainerButton.classList.toggle("hidden");
 });
 
+// CRUD operation functions of update section
+// adds updates in update section
 addUpdateButton.addEventListener("click", () => {
   const addupdatePopup = document.querySelector("#udpateSectionForm");
-  const saveButton = document.querySelector("#udpateSectionForm .saveButton");
+  const saveButton = document.querySelector("#udpateSectionForm .save-button");
   const CancelButton = document.querySelector(
-    "#udpateSectionForm .CancelButton",
+    "#udpateSectionForm .cancel-button",
   );
   const updateDescription = document.querySelector("#updateDescription");
-  const errorMsg = document.querySelector("#udpateSectionForm .errorMsg");
+  const errorMsg = document.querySelector("#udpateSectionForm .error-msg");
   const now = new Date();
   const dateWithTime = `${now.toLocaleDateString("en-US", { month: "long", day: "numeric" })} ${now.toTimeString().slice(0, 5)}`;
   fadeInEffect(addupdatePopup);
@@ -277,13 +279,15 @@ addUpdateButton.addEventListener("click", () => {
   CancelButton.addEventListener("click", () => {
     updateDescription.value = "";
     errorMsg.classList.add("hidden");
-    fadeOutEffect(addupdatePopup1);
+    fadeOutEffect(addupdatePopup);
   });
 });
+
+// deletes updates in update section
 function deleteUpdate(obj) {
   fadeInEffect(warningPopup);
-  const saveButton = document.querySelector("#warningPopup .saveButton");
-  const CancelButton = document.querySelector("#warningPopup .CancelButton");
+  const saveButton = document.querySelector("#warningPopup .save-button");
+  const CancelButton = document.querySelector("#warningPopup .cancel-button");
 
   saveButton.addEventListener("click", () => {
     let deleteRef = ref(
@@ -304,78 +308,30 @@ function deleteUpdate(obj) {
     fadeOutEffect(warningPopup);
   });
 }
-function addCard(key) {
-  const saveButton = document.querySelector("#addNewItemForm .saveButton");
-  const CancelButton = document.querySelector("#addNewItemForm .CancelButton");
-  const newItemName = document.querySelector("#newItemName");
-  const newItemLink = document.querySelector("#newItemLink");
-  const errorMsg = document.querySelector("#addNewItemForm .errorMsg");
-  console.log(dbIncomingData[key]);
-  fadeInEffect(addPopup);
 
-  saveButton.addEventListener("click", () => {
-    if (newItemLink.value.trim() !== "" && newItemName.value.trim() !== "") {
-      const newName = newItemName.value;
-      const newLink = newItemLink.value;
-      const newRef = ref(
-        database,
-        `resources/${sem}/${div}/${subject}/${key}/${newName}`,
-      );
-      for (let subkey in dbIncomingData[key]) {
-        console.log(subkey);
-        if (subkey == newName) {
-          errorMsg.textContent = "Content exists";
-          errorMsg.classList.remove("hidden");
-          return;
-        }
-      }
-      const currentDate = new Date().toISOString().split("T")[0];
-
-      set(newRef, {
-        name: newName,
-        link: newLink,
-      })
-        .then(() => {
-          containerWrapper.innerHTML = "";
-          readDataDb();
-          console.log("New item added successfully!");
-          fadeOutEffect(addPopup);
-          readDataDb();
-          location.reload();
-          // reloadDataDb();
-        })
-        .catch((error) => {
-          window.location.href = "error.html";
-        });
-    } else {
-      errorMsg.textContent = "Fill all the fields";
-      errorMsg.classList.remove("hidden");
-    }
-  });
-  CancelButton.addEventListener("click", () => {
-    newItemName.value = "";
-    newItemLink.value = "";
-    errorMsg.classList.add("hidden");
-    fadeOutEffect(addPopup);
-  });
-}
-
+// CRUD operation functions of card container
+// adds container
 addContainerButton.addEventListener("click", () => {
-  const saveButton = document.querySelector("#addContainerForm .saveButton");
+  const saveButton = document.querySelector("#addContainerPopup .save-button");
   const newContainerName = document.querySelector("#newContainerName");
   const CancelButton = document.querySelector(
-    "#addContainerForm .CancelButton",
+    "#addContainerPopup .cancel-button",
   );
 
-  const errorMsg = document.querySelector("#addContainerForm .errorMsg");
+  const errorMsg = document.querySelector("#addContainerPopup .error-msg");
   // addContainerPopup.classList.remove("hidden");
   fadeInEffect(addContainerPopup);
 
   saveButton.addEventListener("click", () => {
+    if (newContainerName.value.length >= 20) {
+      errorMsg.textContent = "Name too long";
+      errorMsg.classList.remove("hidden");
+      return;
+    }
     if (newContainerName.value.trim() !== "") {
       errorMsg.classList.add("hidden");
       const ContainerName = newContainerName.value;
-      for (let key in dbIncomingData) {
+      for (let key in incomingDbData) {
         console.log(key);
         if (key == ContainerName) {
           errorMsg.textContent = "Container name exists";
@@ -414,72 +370,151 @@ addContainerButton.addEventListener("click", () => {
     fadeOutEffect(addContainerPopup);
   });
 });
-function deleteCard() {
+
+// delete's container
+function deleteContainer(key) {
   fadeInEffect(warningPopup);
-  const saveButton = document.querySelector("#warningPopup .saveButton");
-  const CancelButton = document.querySelector("#warningPopup .CancelButton");
-
+  const saveButton = document.querySelector("#warningPopup .save-button");
+  const CancelButton = document.querySelector("#warningPopup .cancel-button");
   saveButton.addEventListener("click", () => {
-    if (!isDeleteContainerFlag) {
-      let deleteRef = ref(
-        database,
-        `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
-      );
+    let deleteRef = ref(database, `resources/${sem}/${div}/${subject}/${key}`);
 
-      remove(deleteRef)
-        .then(() => {
-          console.log(
-            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
-          );
+    remove(deleteRef)
+      .then(() => {
+        console.log(
+          `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
+        );
 
-          console.log("Card updated successfully!");
-          fadeOutEffect(warningPopup);
-          location.reload();
-        })
-        .catch((error) => {
-          window.location.href = "error.html";
-        });
-    } else {
-      let deleteRef = ref(
-        database,
-        `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
-      );
-
-      remove(deleteRef)
-        .then(() => {
-          console.log(
-            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
-          );
-
-          console.log("Card updated successfully!");
-          fadeOutEffect(warningPopup);
-          location.reload();
-        })
-        .catch((error) => {
-          window.location.href = "error.html";
-        });
-    }
+        console.log("Card updated successfully!");
+        fadeOutEffect(warningPopup);
+        location.reload();
+      })
+      .catch((error) => {
+        window.location.href = "error.html";
+      });
   });
   CancelButton.addEventListener("click", () => {
     fadeOutEffect(warningPopup);
   });
 }
+
+// CRUD operation functions of individual card
+// adds card
+function addCard(key) {
+  const saveButton = document.querySelector("#addNewItemPopup .save-button");
+  const CancelButton = document.querySelector(
+    "#addNewItemPopup .cancel-button",
+  );
+  const newItemName = document.querySelector("#newItemName");
+  const newItemLink = document.querySelector("#newItemLink");
+  const errorMsg = document.querySelector("#addNewItemPopup .error-msg");
+  console.log(incomingDbData[key]);
+  fadeInEffect(addItemPopup);
+
+  saveButton.addEventListener("click", () => {
+    if (newItemLink.value.trim() !== "" && newItemName.value.trim() !== "") {
+      const newName = newItemName.value;
+      const newLink = newItemLink.value;
+      const newRef = ref(
+        database,
+        `resources/${sem}/${div}/${subject}/${key}/${newName}`,
+      );
+      for (let subkey in incomingDbData[key]) {
+        console.log(subkey);
+        if (subkey == newName) {
+          errorMsg.textContent = "Content exists";
+          errorMsg.classList.remove("hidden");
+          return;
+        }
+        if (newName.length >= 20) {
+          errorMsg.textContent = "Name too long";
+          errorMsg.classList.remove("hidden");
+          return;
+        }
+      }
+      const currentDate = new Date().toISOString().split("T")[0];
+
+      set(newRef, {
+        name: newName,
+        link: newLink,
+      })
+        .then(() => {
+          containerWrapper.innerHTML = "";
+          readDataDb();
+          console.log("New item added successfully!");
+          fadeOutEffect(addItemPopup);
+          readDataDb();
+          location.reload();
+          // reloadDataDb();
+        })
+        .catch((error) => {
+          window.location.href = "error.html";
+        });
+    } else {
+      errorMsg.textContent = "Fill all the fields";
+      errorMsg.classList.remove("hidden");
+    }
+  });
+  CancelButton.addEventListener("click", () => {
+    newItemName.value = "";
+    newItemLink.value = "";
+    errorMsg.classList.add("hidden");
+    fadeOutEffect(addItemPopup);
+  });
+}
+
+// delete's card
+function deleteCard() {
+  fadeInEffect(warningPopup);
+  const saveButton = document.querySelector("#warningPopup .save-button");
+  const CancelButton = document.querySelector("#warningPopup .cancel-button");
+
+  saveButton.addEventListener("click", () => {
+    let deleteRef = ref(
+      database,
+      `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+    );
+
+    remove(deleteRef)
+      .then(() => {
+        console.log(
+          `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
+        );
+
+        console.log("Card updated successfully!");
+        fadeOutEffect(warningPopup);
+        location.reload();
+      })
+      .catch((error) => {
+        window.location.href = "error.html";
+      });
+  });
+  CancelButton.addEventListener("click", () => {
+    fadeOutEffect(warningPopup);
+  });
+}
+
+// edits card
 function editCard(currentItemName, currentItemLink) {
-  const errorMsg = document.querySelector("#editForm .errorMsg");
+  const errorMsg = document.querySelector("#editItemPopup .error-msg");
   const editedName = document.querySelector("#editedName");
   const editedLink = document.querySelector("#editedLink");
-  const CancelButton = document.querySelector("#editForm .CancelButton");
-  const saveButton = document.querySelector("#editForm .saveButton");
+  const CancelButton = document.querySelector("#editItemPopup .cancel-button");
+  const saveButton = document.querySelector("#editItemPopup .save-button");
 
   editedLink.value = currentItemLink;
   editedName.value = currentItemName;
   console.log(currentEditingData.parentContainerKey);
-  fadeInEffect(editPopup);
+  fadeInEffect(editItemPopup);
   console.log("Editing Mode Active:", isEditing);
   saveButton.addEventListener("click", () => {
-    // if (!currentEditingData.key) return;
     if (editedLink.value.trim() !== "" && editedName.value.trim() !== "") {
-      fadeOutEffect(editPopup);
+      if (editedName.value.length >= 20) {
+        errorMsg.textContent = "Name too long";
+        errorMsg.classList.remove("hidden");
+        return;
+      }
+      fadeOutEffect(editItemPopup);
 
       const updatedData = {
         link: editedLink.value,
@@ -498,20 +533,22 @@ function editCard(currentItemName, currentItemLink) {
           );
 
           console.log("Card updated successfully!");
-          fadeOutEffect(editPopup);
+          fadeOutEffect(editItemPopup);
           location.reload();
         })
         .catch((error) => {
           window.location.href = "error.html";
         });
     } else {
+      errorMsg.textContent = "Fill all the fields";
+
       errorMsg.classList.remove("hidden");
     }
   });
   CancelButton.addEventListener("click", (event) => {
     errorMsg.classList.add("hidden");
 
-    fadeOutEffect(editPopup);
+    fadeOutEffect(editItemPopup);
     event.stopPropagation();
   });
 }

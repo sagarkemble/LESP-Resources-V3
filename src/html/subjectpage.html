@@ -63,7 +63,7 @@
             </ul>
           </li>
           <li><a href="syllabus.html">Syllabus</a></li>
-          <li id="loginStatus" class="cursor-pointer">Login</li>
+          <li id="loginToggleButton" class="cursor-pointer"></li>
         </ul>
       </div>
       <div
@@ -94,31 +94,33 @@
     </nav>
     <!-- nav bar end -->
 
-    <div class="flex">
-      <div
-        id="addContainerButton"
-        class="click-effect ml-3 hidden max-h-0 cursor-pointer rounded-lg bg-red-500 px-2 text-center opacity-0 transition-all ease-in-out"
-      >
-        add container
-      </div>
+    <div
+      id="addContainerButton"
+      class="click-effect ml-3 hidden max-h-0 w-fit cursor-pointer rounded-lg bg-red-500 px-2 text-center opacity-0 transition-all ease-in-out"
+    >
+      add container
     </div>
+
     <div class="containerWrapper">
+      <!-- update section -->
       <div
         class="update-section-container my-2 flex items-center justify-center"
       >
         <div class="card mx-3 w-full rounded-3xl bg-[#171D2B] p-6">
           <div class="content-container flex flex-col gap-2 text-white">
             <div class="icon-title-wrapper flex items-center gap-1">
-              <div class="icon -translate-x-1">
+              <div class="icon-wrapper -translate-x-1">
                 <img
                   src="../assets/icons/black_bg _icons/notice.png"
                   alt=""
                   class="h-12"
                 />
               </div>
-              <div class="title flex items-center text-lg font-semibold">
+              <div
+                class="title-addcontent-wrapper flex items-center text-lg font-semibold"
+              >
                 <p>Update:</p>
-                <div class="add-content-button hidden px-2">
+                <div class="add-content-button-wrapper hidden px-2">
                   <i class="fa-solid fa-plus"></i>
                 </div>
               </div>
@@ -130,41 +132,13 @@
         </div>
       </div>
 
-      <!-- warning popup -->
-      <div
-        class="wrapper fixed inset-0 z-20 flex hidden items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
-        id="warningPopup"
-      >
-        <div class="wrapper">
-          <div
-            class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
-          >
-            <p>Are you sure you want to remove this</p>
-            <div class="flex gap-3 p-1">
-              <button
-                type="button"
-                class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4"
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- edit popup -->
+      <!-- Add update popup -->
       <div
         class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
         id="udpateSectionForm"
       >
         <form
-          class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+          class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
           action=""
         >
           <div class="flex w-full items-center justify-between">
@@ -178,20 +152,20 @@
               class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
             />
           </div>
-          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+          <p class="error-msg mr-auto hidden pl-2 text-red-400">
             Fill all the fields
           </p>
 
           <div class="flex w-full gap-3 p-1">
             <button
               type="button"
-              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="save-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Save
             </button>
             <button
               type="button"
-              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="cancel-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Cancel
             </button>
@@ -199,18 +173,45 @@
         </form>
       </div>
 
-      <!-- edit popup -->
+      <!-- warning popup -->
+      <div
+        class="warning-popup-container fixed inset-0 z-20 flex hidden items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="warningPopup"
+      >
+        <div class="popup-wrapper">
+          <div
+            class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+          >
+            <p>Are you sure you want to remove this</p>
+            <div class="flex gap-3 p-1">
+              <button
+                type="button"
+                class="save-button click-effect rounded-full bg-red-500 p-1.5 px-4"
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                class="cancel-button click-effect rounded-full bg-red-500 p-1.5 px-4"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- edit card popup -->
       <div
         class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
-        id="editForm"
+        id="editItemPopup"
       >
         <form
-          class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
-          action=""
+          class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
         >
           <div class="flex w-full items-center justify-between">
             <p class="pl-1 text-xl font-bold">Edit content</p>
-            <i class="fa-solid fa-trash ml-auto pr-2" id="deleteButton"></i>
+            <i class="fa-solid fa-trash ml-auto pr-2" id="deleteItemButton"></i>
           </div>
           <div class="flex flex-col">
             <label for="" class="pl-1">Name</label>
@@ -228,20 +229,20 @@
               class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
             />
           </div>
-          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+          <p class="error-msg mr-auto hidden pl-2 text-red-400">
             Fill all the fields
           </p>
 
           <div class="flex w-full gap-3 p-1">
             <button
               type="button"
-              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="save-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Save
             </button>
             <button
               type="button"
-              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="cancel-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Cancel
             </button>
@@ -252,10 +253,10 @@
       <!-- add new card -->
       <div
         class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
-        id="addNewItemForm"
+        id="addNewItemPopup"
       >
         <form
-          class="form flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+          class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
         >
           <p class="mr-auto pl-1 text-xl font-bold">Add new content</p>
           <div class="flex flex-col">
@@ -274,19 +275,19 @@
               class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
             />
           </div>
-          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+          <p class="error-msg mr-auto hidden pl-2 text-red-400">
             Fill all the fields
           </p>
           <div class="flex w-full gap-3 p-1">
             <button
               type="button"
-              class="saveButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+              class="save-button font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
             >
               Save
             </button>
             <button
               type="button"
-              class="CancelButton font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
+              class="cancel-button font-semibold1 click-effect rounded-full bg-red-500 p-1.5 px-4"
             >
               Cancel
             </button>
@@ -297,7 +298,7 @@
       <!-- add Container Popup -->
       <div
         class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
-        id="addContainerForm"
+        id="addContainerPopup"
       >
         <form
           class="submissionForm flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
@@ -311,19 +312,19 @@
               class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
             />
           </div>
-          <p class="errorMsg mr-auto hidden pl-2 text-red-400">
+          <p class="error-msg mr-auto hidden pl-2 text-red-400">
             Name the container
           </p>
           <div class="flex w-full gap-3 p-1">
             <button
               type="button"
-              class="saveButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="save-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Save
             </button>
             <button
               type="button"
-              class="CancelButton click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+              class="cancel-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
             >
               Cancel
             </button>
@@ -331,6 +332,37 @@
         </form>
       </div>
     </div>
+
+    <footer
+      class="mt-auto flex flex-col gap-4 border-t-2 border-[#171D2A] px-3 py-5"
+    >
+      <div class="flex flex-col">
+        <p class="text-lg font-semibold">Report Bug or Contribute:</p>
+        <div class="social-icons-container flex gap-3 text-2xl text-gray-300">
+          <a href="https://github.com/sagarkemble"
+            ><i class="fa-brands fa-github social-icon"></i
+          ></a>
+          <a href="https://www.instagram.com/sagar_kemble_"
+            ><i class="fa-brands fa-instagram social-icon"></i
+          ></a>
+          <a href="https://www.threads.net/@sagar_kemble_"
+            ><i class="fa-brands fa-threads social-icon"></i
+          ></a>
+          <a href="https://www.linkedin.com/in/sagar-kemble-816ba4342"
+            ><i class="fa-brands fa-linkedin social-icon"></i
+          ></a>
+        </div>
+      </div>
+      <div class="">
+        <p class="text-lg font-semibold">Visit us:</p>
+        <p class="text-xs">
+          Plot No. P-41, MIDC Kupwad, Sangli, Maharashtra 416436
+        </p>
+      </div>
+      <p class="text-xs text-gray-400">
+        &copy Latthe Education Society’s Polytechnic
+      </p>
+    </footer>
 
     <script type="module" src="../scripts/subjectpage.js"></script>
   </body>
