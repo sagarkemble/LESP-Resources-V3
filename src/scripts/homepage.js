@@ -34,32 +34,6 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "./login.html";
   }
 });
-{
-  /* <div
-      class="my-3 mb-6 flex flex-col px-3 text-base font-semibold text-white"
-    >
-      <div class="title mb-3 flex w-full items-center gap-2 text-2xl font-bold">
-        <p>Assignments</p>
-        <div class="iconsWrapper flex hidden w-full gap-2">
-          <i class="fa-solid fa-plus addElementIcon"></i
-          ><i
-            class="fa-solid fa-trash deleteContainerIcon mr-2 ml-auto text-xl"
-          ></i>
-        </div>
-      </div>
-      <div class="grid-auto-fit">
-        <a
-          href="https://drive.google.com/file/d/10sUhxYFJ05wl18IwyI-5FOhrzcPgRX0U/view"
-          target="_blank"
-          ><div
-            class="assignment-card click-effect md:hover-effect flex cursor-pointer justify-center rounded-2xl bg-[#171D2B] px-6 py-4"
-          >
-            <div>sum-of-series</div>
-          </div></a
-        >
-      </div>
-    </div> */
-}
 
 //this toggles the login state
 loginToggleButton.addEventListener("click", () => {
@@ -171,6 +145,26 @@ function createSwiperSlide() {
 
   initilizeSwiper();
 }
+// swiper initilisation
+function initilizeSwiper() {
+  let swiper1 = new Swiper("#swiper-1", {
+    direction: "horizontal",
+    loop: true,
+    centeredSlides: true,
+    slidesPerView: 1.2,
+    spaceBetween: 20,
+    breakpoints: {
+      768: {
+        slidesPerView: "auto",
+      },
+    },
+
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+}
 
 // edit button click
 editToggleButton.addEventListener("click", () => {
@@ -194,6 +188,7 @@ editToggleButton.addEventListener("click", () => {
   // addContainerButton.classList.toggle("hidden");
 });
 
+// CRUD operations functions of notice slides
 // add notice
 addNoticeSlide.addEventListener("click", () => {
   const saveButton = document.querySelector("#addNewNoticeForm .saveButton");
@@ -281,9 +276,7 @@ addNoticeSlide.addEventListener("click", () => {
     fadeOutEffect(newNoticeSlide);
   });
 });
-
 // delete notice
-
 function deleteNotice(key) {
   fadeInEffect(warningPopup);
   const obj = NoticeData[key];
@@ -305,27 +298,6 @@ function deleteNotice(key) {
   });
   CancelButton.addEventListener("click", () => {
     fadeOutEffect(warningPopup);
-  });
-}
-
-// swiper initilisation
-function initilizeSwiper() {
-  let swiper1 = new Swiper("#swiper-1", {
-    direction: "horizontal",
-    loop: true,
-    centeredSlides: true,
-    slidesPerView: 1.2,
-    spaceBetween: 20,
-    breakpoints: {
-      768: {
-        slidesPerView: "auto",
-      },
-    },
-
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
   });
 }
 

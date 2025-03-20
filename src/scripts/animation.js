@@ -15,18 +15,18 @@ async function fadeOutEffect(element) {
     element.style.paddingTop = "0";
     element.style.paddingBottom = "0";
   }
-  await new Promise((resolve) => setTimeout(resolve, 200)); // Wait for transition
+  await new Promise((resolve) => setTimeout(resolve, 200));
   element.classList.add("hidden");
 }
 
 async function smoothTextChange(element, newText) {
-  element.style.transform = "scale(0.95)"; // Shrink effect
-  element.style.transition = "transform 0.2s ease-in-out"; // Smooth transition
+  element.style.transform = "scale(0.95)";
+  element.style.transition = "transform 0.2s ease-in-out";
 
-  await new Promise((resolve) => setTimeout(resolve, 150)); // Wait for transition
+  await new Promise((resolve) => setTimeout(resolve, 150));
 
-  element.textContent = newText; // Change text
-  element.style.transform = "scale(1)"; // Scale back
+  element.textContent = newText;
+  element.style.transform = "scale(1)";
 }
 
 export { fadeInEffect, fadeOutEffect, smoothTextChange };
