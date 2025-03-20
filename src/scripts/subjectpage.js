@@ -136,6 +136,7 @@ function createWrapper() {
     const title = document.createElement("p");
     const subWrapper = document.createElement("div");
     const addElementIcon = document.createElement("i");
+    const editContainerIcon = document.createElement("i");
     const parentContainerName = key;
     const cardContainer = document.createElement("div");
     const iconsWrapper = document.createElement("div");
@@ -144,7 +145,9 @@ function createWrapper() {
     iconsWrapper.className = "iconsWrapper hidden flex gap-2 flex  w-full";
     addElementIcon.className = "fa-solid fa-plus  addElementIcon ";
     deleteContainerIcon.className =
-      "fa-solid fa-trash  deleteContainerIcon ml-auto mr-2 text-xl";
+      "fa-solid fa-trash  deleteContainerIcon  mr-2 text-xl";
+    editContainerIcon.className =
+      "fa-solid fa-pen deleteContainerIcon ml-auto mr-2 text-xl";
     subWrapper.className =
       "title mb-3 text-2xl font-bold flex items-center gap-2 w-full";
     title.textContent = incomingDbData[key].name;
@@ -152,6 +155,7 @@ function createWrapper() {
     subWrapper.appendChild(title);
     subWrapper.appendChild(iconsWrapper);
     iconsWrapper.appendChild(addElementIcon);
+    iconsWrapper.appendChild(editContainerIcon);
     iconsWrapper.appendChild(deleteContainerIcon);
     wrapper.appendChild(subWrapper);
     wrapper.appendChild(cardContainer);
@@ -162,6 +166,9 @@ function createWrapper() {
     });
     deleteContainerIcon.addEventListener("click", () => {
       deleteContainer(key);
+    });
+    editContainerIcon.addEventListener("click", () => {
+      editContainer(key, title.textContent);
     });
     if (isEditing) {
       iconsWrapper.classList.remove("hidden");
@@ -338,7 +345,6 @@ addContainerButton.addEventListener("click", () => {
         }
       }
 
-      const currentDate = new Date().toISOString().split("T")[0];
       const newRef = push(ref(database, `resources/${sem}/${div}/${subject}`));
 
       set(newRef, { name: ContainerName })
@@ -389,6 +395,58 @@ function deleteContainer(key) {
   });
 }
 
+// edits container
+function editContainer(key, currentName) {
+  const saveButton = document.querySelector("#editContainerPopup .save-button");
+  const editedContainerName = document.querySelector("#editedContainerName");
+  editedContainerName.value = currentName;
+  const CancelButton = document.querySelector(
+    "#editContainerPopup .cancel-button",
+  );
+
+  const errorMsg = document.querySelector("#editContainerPopup .error-msg");
+  fadeInEffect(editContainerPopup);
+
+  saveButton.addEventListener("click", () => {
+    if (editedContainerName.value.length >= 20) {
+      errorMsg.textContent = "Name too long";
+      errorMsg.classList.remove("hidden");
+      return;
+    }
+    if (editedContainerName.value.trim() !== "") {
+      errorMsg.classList.add("hidden");
+      const ContainerName = editedContainerName.value;
+      for (let key in incomingDbData) {
+        if (key == ContainerName) {
+          errorMsg.textContent = "Container name exists";
+          errorMsg.classList.remove("hidden");
+          return;
+        }
+      }
+
+      const Ref = ref(database, `resources/${sem}/${div}/${subject}/${key}`);
+      update(Ref, { name: ContainerName })
+        .then(() => {
+          console.log("item edited successfully!");
+          fadeOutEffect(editContainerPopup);
+          location.reload();
+        })
+        .catch((error) => {
+          window.location.href = "error.html";
+        });
+    } else {
+      errorMsg.textContent = "Fill all the fields";
+      errorMsg.classList.remove("hidden");
+    }
+  });
+  CancelButton.addEventListener("click", () => {
+    errorMsg.textContent = "Fill all the fields";
+    errorMsg.classList.add("hidden");
+    editedContainerName.value = "";
+    fadeOutEffect(editContainerPopup);
+  });
+}
+
 // CRUD operation functions of individual card
 // adds card
 function addCard(key) {
@@ -420,7 +478,6 @@ function addCard(key) {
           return;
         }
       }
-      const currentDate = new Date().toISOString().split("T")[0];
 
       set(newRef, {
         name: newName,

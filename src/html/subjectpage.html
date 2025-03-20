@@ -331,6 +331,42 @@
           </div>
         </form>
       </div>
+      <!-- add Container Popup -->
+      <div
+        class="fixed inset-0 flex hidden h-full w-full items-center justify-center bg-[#00000080] opacity-0 transition-all duration-200 ease-in-out"
+        id="editContainerPopup"
+      >
+        <form
+          class="flex flex-col items-center gap-2 rounded-lg bg-[#171D2A] p-3 text-white"
+        >
+          <p class="mr-auto pl-1 text-xl font-bold">Edit container</p>
+          <div class="flex flex-col">
+            <label for="" class="pl-1.5">Name</label>
+            <input
+              type="text"
+              id="editedContainerName"
+              class="rounded-lg border-2 border-[#454545] p-1 pl-2 focus:outline-[#535353]"
+            />
+          </div>
+          <p class="error-msg mr-auto hidden pl-2 text-red-400">
+            Name the container
+          </p>
+          <div class="flex w-full gap-3 p-1">
+            <button
+              type="button"
+              class="save-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="cancel-button click-effect rounded-full bg-red-500 p-1.5 px-4 text-base font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <footer
