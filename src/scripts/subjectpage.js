@@ -5,6 +5,7 @@ import {
   ref,
   set,
   get,
+  push,
   update,
   onValue,
   remove,
@@ -67,7 +68,6 @@ async function fetchDbData() {
   await get(dbRef)
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         incomingDbData = snapshot.val();
         loadUpdates();
         createWrapper();
@@ -88,7 +88,6 @@ async function reloadDataDb() {
   await get(dbRef)
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         containerWrapper.innerHTML = "";
         incomingDbData = snapshot.val();
         createWrapper();
@@ -332,7 +331,6 @@ addContainerButton.addEventListener("click", () => {
       errorMsg.classList.add("hidden");
       const ContainerName = newContainerName.value;
       for (let key in incomingDbData) {
-        console.log(key);
         if (key == ContainerName) {
           errorMsg.textContent = "Container name exists";
           errorMsg.classList.remove("hidden");
@@ -341,10 +339,7 @@ addContainerButton.addEventListener("click", () => {
       }
 
       const currentDate = new Date().toISOString().split("T")[0];
-      const newRef = ref(
-        database,
-        `resources/${sem}/${div}/${subject}/${ContainerName}`,
-      );
+      const newRef = push(ref(database, `resources/${sem}/${div}/${subject}`));
 
       set(newRef, { name: ContainerName })
         .then(() => {
@@ -381,10 +376,6 @@ function deleteContainer(key) {
 
     remove(deleteRef)
       .then(() => {
-        console.log(
-          `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}`,
-        );
-
         console.log("Card updated successfully!");
         fadeOutEffect(warningPopup);
         location.reload();
@@ -408,20 +399,17 @@ function addCard(key) {
   const newItemName = document.querySelector("#newItemName");
   const newItemLink = document.querySelector("#newItemLink");
   const errorMsg = document.querySelector("#addNewItemPopup .error-msg");
-  console.log(incomingDbData[key]);
   fadeInEffect(addItemPopup);
 
   saveButton.addEventListener("click", () => {
     if (newItemLink.value.trim() !== "" && newItemName.value.trim() !== "") {
       const newName = newItemName.value;
       const newLink = newItemLink.value;
-      const newRef = ref(
-        database,
-        `resources/${sem}/${div}/${subject}/${key}/${newName}`,
+      const newRef = push(
+        ref(database, `resources/${sem}/${div}/${subject}/${key}`),
       );
       for (let subkey in incomingDbData[key]) {
-        console.log(subkey);
-        if (subkey == newName) {
+        if (subkey.name == newName) {
           errorMsg.textContent = "Content exists";
           errorMsg.classList.remove("hidden");
           return;
@@ -440,14 +428,12 @@ function addCard(key) {
       })
         .then(() => {
           containerWrapper.innerHTML = "";
-          readDataDb();
           console.log("New item added successfully!");
           fadeOutEffect(addItemPopup);
-          readDataDb();
           location.reload();
-          // reloadDataDb();
         })
         .catch((error) => {
+          console.log(error);
           window.location.href = "error.html";
         });
     } else {
@@ -477,10 +463,6 @@ function deleteCard() {
 
     remove(deleteRef)
       .then(() => {
-        console.log(
-          `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
-        );
-
         console.log("Card updated successfully!");
         fadeOutEffect(warningPopup);
         location.reload();
@@ -504,7 +486,6 @@ function editCard(currentItemName, currentItemLink) {
 
   editedLink.value = currentItemLink;
   editedName.value = currentItemName;
-  console.log(currentEditingData.parentContainerKey);
   fadeInEffect(editItemPopup);
   console.log("Editing Mode Active:", isEditing);
   saveButton.addEventListener("click", () => {
@@ -528,10 +509,6 @@ function editCard(currentItemName, currentItemLink) {
 
       update(updateRef, updatedData)
         .then(() => {
-          console.log(
-            `resources/${sem}/${div}/${subject}/${currentEditingData.parentContainerKey}/${currentEditingData.key}`,
-          );
-
           console.log("Card updated successfully!");
           fadeOutEffect(editItemPopup);
           location.reload();
